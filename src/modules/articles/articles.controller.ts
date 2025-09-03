@@ -19,10 +19,12 @@ import {
 } from '@nestjs/swagger';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { ArticleResponseDto } from './dto/article-response.dto';
+
 
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { ApiPaginatedResponse } from '../../common/decorators/api-paginated-response.decorator';
+import { ArticleResponseDto } from './dto/article-response.dto';
+import { SuccessResponse } from '@/common/helpers/successResponse';
 
 @ApiTags('Articles')
 @Controller('articles')
@@ -38,10 +40,13 @@ export class ArticlesController {
     description: 'Article created successfully',
     type: ArticleResponseDto,
   })
-  async create(@Body() createArticleDto: CreateArticleDto): Promise<any> {
+  async create(@Body() createArticleDto: CreateArticleDto) {
     const article = await this.articlesService.create(createArticleDto);
     console.log('article');
-    return article;
+    return new SuccessResponse(
+      'Article Created Successfully',
+      article,
+    );
   }
 
   @Get()
@@ -52,7 +57,11 @@ export class ArticlesController {
   @ApiQuery({ name: 'tags', required: false, type: String, description: 'Filter by tags (comma-separated)' })
   @ApiQuery({ name: 'author', required: false, type: String, description: 'Filter by author' })
   async findAll(@Query() paginationDto: PaginationDto) {
-    return this.articlesService.findAll(paginationDto);
+    const articles = await this.articlesService.findAll(paginationDto);
+    return new SuccessResponse(
+      'Articles Found Successfully',
+      articles,
+    );
   }
 
   @Get(':id')
@@ -67,8 +76,11 @@ export class ArticlesController {
     status: HttpStatus.NOT_FOUND,
     description: 'Article not found',
   })
-  async findOne(@Param('id') id: string): Promise<ArticleResponseDto> {
+  async findOne(@Param('id') id: string) {
     const article = await this.articlesService.findOne(id);
-    return new ArticleResponseDto(article);
+    return new SuccessResponse(
+      'Article Found Successfully',
+      article,
+    );
   }
 }

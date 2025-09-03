@@ -15,4 +15,17 @@ export default () => ({
       defaultLimit: 10,
       maxLimit: 100,
     },
+    logging: {
+      level: process.env.LOG_LEVEL || 'info',
+      dir: process.env.LOG_DIR || 'logs',
+    },
+    sentry: {
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV || 'development',
+      tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE) || 0.1,
+    },
+    metrics: {
+      enabled: process.env.METRICS_ENABLED === 'true',
+      path: process.env.METRICS_PATH || '/metrics',
+    },
   });

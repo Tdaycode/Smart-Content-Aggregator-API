@@ -44,7 +44,7 @@ A sophisticated RESTful API for content aggregation with AI-powered features, bu
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-- Node.js (v18+ recommended)
+- Node.js (v20+ recommended)
 - MongoDB (v6.0+)
 - Docker & Docker Compose (optional)
 
@@ -69,21 +69,19 @@ docker-compose up -d
 
 ```bash
 # Install dependencies
-npm install
+yarn install
 
 # Set up environment variables
 cp .env.example .env
 # Edit .env and add your MongoDB URI and OpenAI API key
 
-# Run database migrations/seeds (if any)
-npm run seed
 
 # Start in development mode
-npm run start:dev
+yarn start:dev
 
 # Start in production mode
-npm run build
-npm run start:prod
+yarn build
+yarn start:prod
 ```
 
 ### Environment Configuration
@@ -151,16 +149,16 @@ curl http://localhost:3000/api/v1/recommendations/userId?limit=10
 
 ```bash
 # Run unit tests
-npm run test
+yarn run test
 
 # Run tests with coverage
-npm run test:cov
+yarn run test:cov
 
 # Run e2e tests
-npm run test:e2e
+yarn run test:e2e
 
 # Run tests in watch mode
-npm run test:watch
+yarn run test:watch
 ```
 
 ### Test Coverage Areas
@@ -185,20 +183,47 @@ npm run test:watch
 - **Database Queries**: Optimized with proper indexing
 - **AI Summary Generation**: < 2s average response time
 
-## 🚦 Monitoring & Logging
+## 📊 Monitoring & Observability
 
-- **Structured Logging**: Winston logger with log levels
-- **Health Checks**: `/health` endpoint for monitoring
-- **Metrics Collection**: Ready for Prometheus integration
-- **Error Tracking**: Sentry-ready error handling
+### Logging
+- **Winston Logger**: Structured logging with multiple transports
+- **Log Levels**: error, warn, info, http, verbose, debug
+- **Log Rotation**: Daily rotation with 14-day retention
+- **Request Logging**: All requests logged with unique request IDs
+
+### Health Checks
+- `/api/health` - Basic health check
+- `/api/health/live` - Kubernetes liveness probe
+- `/api/health/ready` - Kubernetes readiness probe  
+- `/api/health/detailed` - Detailed metrics and system info
+
+### Metrics (Prometheus)
+- `/api/metrics` - Prometheus-compatible metrics endpoint
+- **Default Metrics**: CPU, memory, event loop stats
+- **Custom Metrics**:
+  - HTTP request duration histogram
+  - Total request counter
+  - Articles created counter
+  - AI summaries generated counter
+  - Database query duration histogram
+
+### Error Tracking (Sentry)
+- Automatic error capture for 5xx errors
+- User context tracking
+- Performance monitoring
+- Profiling support
+
+### Dashboard Setup
+
+1. **Start Monitoring Stack**:
+```bash
+docker-compose up -d prometheus grafana
 
 ## 🔄 CI/CD Considerations
 
 The project is structured for easy CI/CD integration:
 - Dockerized for consistent deployments
 - Environment-based configuration
-- Database migration support
-- Comprehensive test suite
 - Linting and formatting standards
 
 ## 📝 Design Decisions
