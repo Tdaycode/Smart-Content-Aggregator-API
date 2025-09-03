@@ -19,7 +19,6 @@ A sophisticated RESTful API for content aggregation with AI-powered features, bu
 - **Documentation**: Swagger/OpenAPI
 - **Validation**: class-validator & class-transformer
 - **Security**: Rate limiting, CORS, input validation
-- **Testing**: Jest for unit and integration tests
 - **Containerization**: Docker & Docker Compose
 
 ## 🏗️ Architecture Highlights
@@ -38,7 +37,6 @@ A sophisticated RESTful API for content aggregation with AI-powered features, bu
 ### Performance Optimizations
 - **Database Indexes**: Strategic indexing on frequently queried fields
 - **Pagination**: Efficient cursor-based pagination for large datasets
-- **Caching Strategy**: Response caching for frequently accessed content
 - **Connection Pooling**: Optimized MongoDB connection management
 
 ## 🛠️ Installation & Setup
@@ -53,7 +51,7 @@ A sophisticated RESTful API for content aggregation with AI-powered features, bu
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd smart-content-aggregator
+cd smart-content-aggregator-api
 
 # Copy environment variables
 cp .env.example .env
@@ -145,27 +143,7 @@ curl -X POST http://localhost:3000/api/v1/articles \
 curl http://localhost:3000/api/v1/recommendations/userId?limit=10
 ```
 
-## 🧪 Testing
 
-```bash
-# Run unit tests
-yarn run test
-
-# Run tests with coverage
-yarn run test:cov
-
-# Run e2e tests
-yarn run test:e2e
-
-# Run tests in watch mode
-yarn run test:watch
-```
-
-### Test Coverage Areas
-- Unit tests for all services
-- Integration tests for API endpoints
-- Mock testing for AI providers
-- Database query optimization tests
 
 ## 🔒 Security Considerations
 
@@ -255,6 +233,7 @@ Given more time, here are the enhancements I would implement:
 3. **WebSockets**: Real-time notifications for new recommendations
 4. **GraphQL**: Alternative API interface for flexible queries
 5. **Elasticsearch**: Full-text search capabilities
+6. ** Testing**: Add more comprehensive unit and integration tests
 
 ### Feature Enhancements
 1. **Advanced ML Pipeline**: 
