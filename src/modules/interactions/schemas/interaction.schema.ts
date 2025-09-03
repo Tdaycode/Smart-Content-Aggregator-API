@@ -1,14 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import {  HydratedDocument, Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-export type InteractionDocument = Interaction & Document;
+export type InteractionDocument = HydratedDocument<Interaction>;
 
 @Schema({
   timestamps: true,
-  toJSON: {
-    virtuals: true,
-  },
 })
 export class Interaction {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
@@ -29,6 +26,25 @@ export class Interaction {
 
 export const InteractionSchema = SchemaFactory.createForClass(Interaction);
 
+InteractionSchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: (_: any, ret: Record<string, any>) => {
+      ret.id = ret._id.toString();
+      delete ret._id;
+      return ret;
+    },
+  });
+  
+  InteractionSchema.set('toObject', {
+    virtuals: true,
+    versionKey: false,
+    transform: (_: any, ret: Record<string, any>) => {
+      ret.id = ret._id.toString();
+      delete ret._id;
+      return ret;
+    },
+  });
 // Compound index for unique interactions
 InteractionSchema.index({ userId: 1, articleId: 1, interactionType: 1 }, { unique: true });
 InteractionSchema.index({ createdAt: -1 });

@@ -10,6 +10,7 @@ import { Interaction, InteractionDocument } from './schemas/interaction.schema';
 import { CreateInteractionDto } from './dto/create-interaction.dto';
 import { Article, ArticleDocument } from '../articles/schemas/article.schema';
 import { UsersService } from '../users/users.service';
+import { ExceptionHelper } from '@/common/helpers/error-handler';
 
 @Injectable()
 export class InteractionsService {
@@ -23,7 +24,7 @@ export class InteractionsService {
     private usersService: UsersService,
   ) {}
 
-  async create(createInteractionDto: CreateInteractionDto): Promise<Interaction> {
+  async create(createInteractionDto: CreateInteractionDto): Promise<InteractionDocument> {
     const { userId, articleId, interactionType } = createInteractionDto;
 
     // Validate user and article exist
@@ -60,33 +61,41 @@ export class InteractionsService {
           'This interaction has already been recorded',
         );
       }
-      throw error;
+      ExceptionHelper.handleException(error);
     }
   }
 
   async findByUser(
     userId: string,
     interactionType?: string,
-  ): Promise<Interaction[]> {
-    const filter: any = { userId };
+  ): Promise<InteractionDocument[]> {
+    try {
+      const filter: any = { userId };
     
-    if (interactionType) {
-      filter.interactionType = interactionType;
-    }
+      if (interactionType) {
+        filter.interactionType = interactionType;
+      }
 
-    return this.interactionModel
+    return await this.interactionModel
       .find(filter)
       .sort({ createdAt: -1 })
       .limit(100)
       .exec();
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
   }
 
-  async findByArticle(articleId: string): Promise<Interaction[]> {
-    return this.interactionModel
+  async findByArticle(articleId: string): Promise<InteractionDocument[]> {
+    try {
+      return await this.interactionModel
       .find({ articleId })
       .sort({ createdAt: -1 })
       .limit(100)
       .exec();
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
   }
 
   private async validateUserAndArticle(

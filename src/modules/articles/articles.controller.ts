@@ -80,7 +80,7 @@ export class ArticlesController {
     const article = await this.articlesService.findOne(id);
     return new SuccessResponse(
       'Article Found Successfully',
-      article,
+      article.toObject(),
     );
   }
 }

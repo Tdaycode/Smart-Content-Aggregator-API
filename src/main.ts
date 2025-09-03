@@ -87,7 +87,7 @@ async function bootstrap() {
   logger.log(`🚀 Application is running on: http://localhost:${port}/api/v1`, 'Main');
   logger.log(`📚 API Documentation: http://localhost:${port}/api-docs`, 'Main');
   logger.log(`💊 Health Check: http://localhost:${port}/api/v1/health`, 'Main');
-  logger.log(`📊 Metrics: http://localhost:${port}/api/v1/metrics`, 'Main');
+  logger.log(`📊 Metrics: http://localhost:${port}/api/v1/metrics/json `, 'Main');
 }
 
 bootstrap();

@@ -20,6 +20,7 @@ import {
 import { InteractionsService } from './interactions.service';
 import { CreateInteractionDto } from './dto/create-interaction.dto';
 import { InteractionResponseDto } from './dto/interaction-response.dto';
+import { SuccessResponse } from '@/common/helpers/successResponse';
 
 
 @ApiTags('Interactions')
@@ -42,9 +43,9 @@ export class InteractionsController {
   })
   async create(
     @Body() createInteractionDto: CreateInteractionDto,
-  ): Promise<InteractionResponseDto> {
+  ) {
     const interaction = await this.interactionsService.create(createInteractionDto);
-    return new InteractionResponseDto(interaction);
+    return new SuccessResponse('Interaction created successfully', interaction.toObject());
   }
 
   @Get('user/:userId')
@@ -63,12 +64,12 @@ export class InteractionsController {
   async findByUser(
     @Param('userId') userId: string,
     @Query('interactionType') interactionType?: string,
-  ): Promise<InteractionResponseDto[]> {
+  ) {
     const interactions = await this.interactionsService.findByUser(
       userId,
       interactionType,
     );
-    return interactions.map(i => new InteractionResponseDto(i));
+    return interactions.map(i => new SuccessResponse('Interaction found successfully', i.toObject()));
   }
 
   @Get('article/:articleId')
@@ -81,8 +82,8 @@ export class InteractionsController {
   })
   async findByArticle(
     @Param('articleId') articleId: string,
-  ): Promise<InteractionResponseDto[]> {
+  ) {
     const interactions = await this.interactionsService.findByArticle(articleId);
-    return interactions.map(i => new InteractionResponseDto(i));
+    return interactions.map(i => new SuccessResponse('Interaction found successfully', i.toObject()));
   }
 }

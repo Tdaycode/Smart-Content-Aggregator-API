@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types, HydratedDocument } from 'mongoose';
+import { Types, HydratedDocument } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserSchema } from '@/modules/users/schemas/user.schema';
 
 
 export type ArticleDocument =HydratedDocument<Article>;
@@ -51,7 +50,7 @@ export class Article {
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
 
-UserSchema.set('toJSON', {
+ArticleSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: (_: any, ret: Record<string, any>) => {
@@ -61,7 +60,7 @@ UserSchema.set('toJSON', {
     },
   });
   
-  UserSchema.set('toObject', {
+  ArticleSchema.set('toObject', {
     virtuals: true,
     versionKey: false,
     transform: (_: any, ret: Record<string, any>) => {

@@ -62,7 +62,7 @@ export class RecommendationsController {
       validLimit,
     );
     const recommendations = articles.map(article => 
-      new ArticleResponseDto(article)
+      new ArticleResponseDto(article.toObject())
     );
 
     return new RecommendationResponseDto({

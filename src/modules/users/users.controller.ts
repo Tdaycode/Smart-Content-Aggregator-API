@@ -70,6 +70,6 @@ export class UsersController {
   })
   async findAll() {
     const users = await this.usersService.findAll();
-    return new SuccessResponse('Users', users);
+    return new SuccessResponse('Users', users.map(u => u.toObject()));
   }
 }

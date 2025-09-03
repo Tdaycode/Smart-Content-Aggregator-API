@@ -7,6 +7,7 @@ export class HealthService extends HealthIndicator {
   private isServiceReady = true;
 
   async isReady(): Promise<HealthIndicatorResult> {
+    
     const isHealthy = this.isServiceReady;
     const result = this.getStatus('service', isHealthy, {
       message: isHealthy ? 'Service is ready' : 'Service is not ready',

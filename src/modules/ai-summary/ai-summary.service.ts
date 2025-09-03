@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OpenAIProvider } from './providers/openai.provider';
 import { SummaryProvider } from './providers/summary.provider.interface';
+import { ExceptionHelper } from '@/common/helpers/error-handler';
 
 
 @Injectable()
@@ -33,7 +34,7 @@ export class AiSummaryService {
       return summary;
     } catch (error) {
       this.logger.error('Error generating AI summary', error);
-      throw error;
+      ExceptionHelper.handleException(error);
     }
   }
 

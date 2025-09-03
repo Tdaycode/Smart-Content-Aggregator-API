@@ -44,13 +44,13 @@ export class UsersService {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
     
-      return user;
+      return user.toObject();
     } catch (error) {
       ExceptionHelper.handleException(error);
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDocument[]> {
     try {
       return await this.userModel
       .find()
@@ -70,7 +70,7 @@ export class UsersService {
         throw new NotFoundException(`User with username ${username} not found`);
       }
     
-      return user;
+      return user.toObject();
     } catch (error) {
       ExceptionHelper.handleException(error);
     }

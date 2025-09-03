@@ -8,6 +8,7 @@ import { AiSummaryService } from '../ai-summary/ai-summary.service';
 import { PaginatedResult } from '../../common/interfaces/paginated-result.interface';
 import { CustomLoggerService } from '../../common/logger/logger.service';
 import { MetricsService } from '../metrics/metrics.service';
+import { ExceptionHelper } from '@/common/helpers/error-handler';
 
 @Injectable()
 export class ArticlesService {
@@ -69,14 +70,14 @@ export class ArticlesService {
         duration: `${duration}s`,
       });
       
-      return savedArticle;
+      return savedArticle.toObject();
     } catch (error) {
       this.logger.error('Failed to create article', error.stack, 'ArticlesService');
-      throw error;
+      ExceptionHelper.handleException(error);
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<Article>> {
+  async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<ArticleDocument>> {
     const startTime = Date.now();
     const { limit = 10, offset = 0, tags, author } = paginationDto;
     
@@ -102,6 +103,8 @@ export class ArticlesService {
         this.articleModel.countDocuments(filter),
       ]);
 
+      const articles = items.map(item => item.toObject());
+
       const duration = (Date.now() - startTime) / 1000;
       this.metricsService.recordDbQuery('find', 'articles', duration);
       
@@ -113,7 +116,7 @@ export class ArticlesService {
       });
 
       return {
-        items,
+        items: articles,
         total,
         limit,
         offset,
@@ -122,11 +125,11 @@ export class ArticlesService {
       };
     } catch (error) {
       this.logger.error('Failed to retrieve articles', error.stack, 'ArticlesService');
-      throw error;
+     ExceptionHelper.handleException(error);
     }
   }
 
-  async findOne(id: string): Promise<Article> {
+  async findOne(id: string): Promise<ArticleDocument> {
     const startTime = Date.now();
     
     try {
@@ -155,7 +158,7 @@ export class ArticlesService {
         throw error;
       }
       this.logger.error(`Failed to retrieve article ${id}`, error.stack, 'ArticlesService');
-      throw error;
+      ExceptionHelper.handleException(error);
     }
   }
 
