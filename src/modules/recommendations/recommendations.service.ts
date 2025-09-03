@@ -13,7 +13,7 @@ export class RecommendationsService {
     @InjectModel(Interaction.name) private interactionModel: Model<InteractionDocument>,
   ) {}
 
-  async getRecommendations(userId: string, limit: number = 10): Promise<Article[]> {
+  async getRecommendations(userId: string, limit: number = 10): Promise<ArticleDocument[]> {
     // Verify user exists
     const user = await this.userModel.findById(userId);
     if (!user) {
@@ -54,7 +54,7 @@ export class RecommendationsService {
     user: UserDocument,
     excludeIds: string[],
     limit: number,
-  ): Promise<Article[]> {
+  ): Promise<ArticleDocument[]> {
     if (!user.interests || user.interests.length === 0) {
       return [];
     }
@@ -72,7 +72,7 @@ export class RecommendationsService {
   private async getPopularRecommendations(
     excludeIds: string[],
     limit: number,
-  ): Promise<Article[]> {
+  ): Promise<ArticleDocument[]> {
     return this.articleModel
       .find({
         _id: { $nin: excludeIds },
@@ -82,7 +82,7 @@ export class RecommendationsService {
       .exec();
   }
 
-  private deduplicateArticles(articles: Article[]): Article[] {
+  private deduplicateArticles(articles: ArticleDocument[]): ArticleDocument[] {
     const seen = new Set<string>();
     return articles.filter(article => {
       const id = article._id.toString();

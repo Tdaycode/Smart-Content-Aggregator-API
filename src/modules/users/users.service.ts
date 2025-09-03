@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument, } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ExceptionHelper } from '@/common/helpers/error-handler';
 
 @Injectable()
 export class UsersService {
@@ -17,57 +18,92 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     try {
-      const createdUser = new this.userModel(createUserDto);
-      return await createdUser.save();
-    } catch (error) {
-      if (error.code === 11000) {
+      this.logger.log('Creating new user',  createUserDto);
+      const existingUser = await this.checkUserExists(createUserDto.username);
+      if (existingUser) {
         throw new ConflictException('Username already exists');
       }
-      throw error;
+      const createdUser = await this.userModel.create(createUserDto);
+
+      return createdUser;
+    } catch (error) {
+      this.logger.error('User creation failed', error);
+      ExceptionHelper.handleException(error);
     }
   }
 
+
+
   async findOne(id: string): Promise<User> {
-    const user = await this.userModel.findById(id).exec();
+    try {
+      const user = await this.userModel.findById(id).exec();
     
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+    
+      return user;
+    } catch (error) {
+      ExceptionHelper.handleException(error);
     }
-    
-    return user;
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel
+    try {
+      return await this.userModel
       .find()
       .sort({ createdAt: -1 })
       .limit(100)
       .exec();
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
   }
 
   async findByUsername(username: string): Promise<User> {
-    const user = await this.userModel.findOne({ username }).exec();
+    try {
+      const user = await this.userModel.findOne({ username }).exec();
     
-    if (!user) {
-      throw new NotFoundException(`User with username ${username} not found`);
+      if (!user) {
+        throw new NotFoundException(`User with username ${username} not found`);
+      }
+    
+      return user;
+    } catch (error) {
+      ExceptionHelper.handleException(error);
     }
-    
-    return user;
   }
 
   async incrementArticleCount(userId: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $inc: { articleCount: 1 } },
-    );
+    try {
+      await this.userModel.findByIdAndUpdate(
+        userId,
+        { $inc: { articleCount: 1 } },
+      );
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
   }
 
   async incrementInteractionCount(userId: string): Promise<void> {
-    await this.userModel.findByIdAndUpdate(
-      userId,
-      { $inc: { interactionCount: 1 } },
-    );
+    try {
+      await this.userModel.findByIdAndUpdate(
+        userId,
+        { $inc: { interactionCount: 1 } },
+      );
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
+  }
+
+  private async checkUserExists(username: string): Promise<User> {
+    try {
+      const user = await this.userModel.findOne({ username }).exec();
+      return user;
+    } catch (error) {
+      ExceptionHelper.handleException(error);
+    }
   }
 }

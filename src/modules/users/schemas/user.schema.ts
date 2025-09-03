@@ -1,19 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema({
   timestamps: true,
-  toJSON: {
-    virtuals: true,
-  },
+  toJSON: { virtuals: true },
 })
 export class User {
-  @ApiProperty()
-  _id: Types.ObjectId;
-
   @Prop({ required: true, unique: true, index: true })
   @ApiProperty()
   username: string;
@@ -43,5 +38,23 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// UserSchema.index({ username: 1 });
+UserSchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: (_: any, ret: Record<string, any>) => {
+      ret.id = ret._id.toString();
+      delete ret._id;
+      return ret;
+    },
+  });
+  
+  UserSchema.set('toObject', {
+    virtuals: true,
+    versionKey: false,
+    transform: (_: any, ret: Record<string, any>) => {
+      ret.id = ret._id.toString();
+      delete ret._id;
+      return ret;
+    },
+  });
 UserSchema.index({ interests: 1 });

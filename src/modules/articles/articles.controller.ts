@@ -45,7 +45,7 @@ export class ArticlesController {
     console.log('article');
     return new SuccessResponse(
       'Article Created Successfully',
-      article,
+      article.toObject(),
     );
   }
 

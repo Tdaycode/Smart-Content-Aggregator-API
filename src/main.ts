@@ -84,10 +84,10 @@ async function bootstrap() {
   const port = configService.get('port') || 3000;
   await app.listen(port);
   
-  logger.log(`🚀 Application is running on: http://localhost:${port}/api`, 'Main');
+  logger.log(`🚀 Application is running on: http://localhost:${port}/api/v1`, 'Main');
   logger.log(`📚 API Documentation: http://localhost:${port}/api-docs`, 'Main');
-  logger.log(`💊 Health Check: http://localhost:${port}/api/health`, 'Main');
-  logger.log(`📊 Metrics: http://localhost:${port}/api/metrics`, 'Main');
+  logger.log(`💊 Health Check: http://localhost:${port}/api/v1/health`, 'Main');
+  logger.log(`📊 Metrics: http://localhost:${port}/api/v1/metrics`, 'Main');
 }
 
 bootstrap();

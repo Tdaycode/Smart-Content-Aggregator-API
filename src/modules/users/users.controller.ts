@@ -18,6 +18,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { SuccessResponse } from '@/common/helpers/successResponse';
 
 @ApiTags('Users')
 @Controller('users')
@@ -37,9 +38,10 @@ export class UsersController {
     status: HttpStatus.CONFLICT,
     description: 'Username already exists',
   })
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-    return new UserResponseDto(user);
+    console.log(' created', user);
+    return new SuccessResponse('User', user.toObject());
   }
 
   @Get(':id')
@@ -54,9 +56,9 @@ export class UsersController {
     status: HttpStatus.NOT_FOUND,
     description: 'User not found',
   })
-  async findOne(@Param('id') id: string): Promise<UserResponseDto> {
+  async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(id);
-    return new UserResponseDto(user);
+    return new SuccessResponse('User', user);
   }
 
   @Get()
@@ -66,8 +68,8 @@ export class UsersController {
     description: 'List of users',
     type: [UserResponseDto],
   })
-  async findAll(): Promise<UserResponseDto[]> {
+  async findAll() {
     const users = await this.usersService.findAll();
-    return users.map(user => new UserResponseDto(user));
+    return new SuccessResponse('Users', users);
   }
 }

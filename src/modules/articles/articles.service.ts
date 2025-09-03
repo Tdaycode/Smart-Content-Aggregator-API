@@ -18,7 +18,7 @@ export class ArticlesService {
     private metricsService: MetricsService,
   ) {}
 
-  async create(createArticleDto: CreateArticleDto): Promise<Article> {
+  async create(createArticleDto: CreateArticleDto): Promise<ArticleDocument> {
     const startTime = Date.now();
     const articleData = { ...createArticleDto };
     let aiSummaryGenerated = false;

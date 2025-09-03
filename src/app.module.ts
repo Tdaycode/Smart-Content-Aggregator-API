@@ -70,10 +70,8 @@ export class AppModule implements NestModule {
       .apply(getSentryRequestHandler())
       .forRoutes({ path: '*', method: RequestMethod.ALL });
     
-    // Apply Sentry error handler to all routes
-    // Note: This should be applied after all other middleware
-    consumer
-      .apply(getSentryErrorHandler())
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+    // consumer
+    //   .apply(getSentryErrorHandler())
+    //   .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

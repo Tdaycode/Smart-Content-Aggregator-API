@@ -48,6 +48,7 @@ export function getSentryErrorHandler(): ErrorRequestHandler {
   if (process.env.SENTRY_DSN) {
     return Sentry.Handlers.errorHandler() as ErrorRequestHandler;
   }
+  console.log('getSentryErrorHandler')
   // Return a no-op middleware if Sentry is not configured
   return (err, req, res, next) => next(err);
 }

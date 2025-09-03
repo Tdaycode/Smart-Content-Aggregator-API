@@ -11,9 +11,6 @@ export type InteractionDocument = Interaction & Document;
   },
 })
 export class Interaction {
-  @ApiProperty()
-  _id: Types.ObjectId;
-
   @Prop({ type: Types.ObjectId, ref: 'User', required: true, index: true })
   @ApiProperty()
   userId: Types.ObjectId;

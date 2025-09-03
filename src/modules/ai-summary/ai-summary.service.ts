@@ -18,15 +18,11 @@ export class AiSummaryService {
 
   async generateSummary(content: string, title?: string): Promise<string> {
     try {
-      // Check if OpenAI is configured
       const apiKey = this.configService.get<string>('openai.apiKey');
       
       if (!apiKey || apiKey === 'mock-api-key') {
-        // Return mock summary for demo purposes
         return this.generateMockSummary(content, title);
       }
-
-      // Generate real summary using OpenAI
       const summary = await this.summaryProvider.generateSummary(content, {
         title,
         maxLength: 150,
