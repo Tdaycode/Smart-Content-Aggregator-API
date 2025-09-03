@@ -7,6 +7,7 @@ export function initSentry(): void {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
       environment: process.env.NODE_ENV || 'development',
+      sendDefaultPii: true,
       integrations: [
         new Sentry.Integrations.Http({ tracing: true }),
         new ProfilingIntegration(),
